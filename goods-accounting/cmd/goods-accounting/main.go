@@ -5,6 +5,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"goods-accounting/internal/config"
 	"log"
+	"net/http"
 )
 
 func main() {
@@ -20,4 +21,7 @@ func main() {
 		log.Fatalf("ping db: %v", err)
 	}
 
+	if err = http.ListenAndServe(cfg.Port, nil); err != nil {
+		log.Fatalf("Unable to start server: %v", err)
+	}
 }

@@ -1,7 +1,7 @@
 BIN := $(CURDIR)/bin
-
+CMD := $(CURDIR)/cmd/goods-accounting
 LOCAL_MIGRATION_DIR=./migrations
-LOCAL_MIGRATION_DSN="host=localhost port=54322 dbname=posgres user=postgres password=postgres sslmode=disable"
+LOCAL_MIGRATION_DSN="host=localhost port=54322 dbname=postgres user=postgres password=postgres sslmode=disable"
 
 .PHONY: update-all-deps
 update-all-deps:
@@ -26,6 +26,16 @@ local-migration-down:
 .PHONY: local-migration-generate
 local-migration-generate:
 	$(BIN)/goose -v -dir ${LOCAL_MIGRATION_DIR} create $(name) sql
+
+.PHONY: bin-dir
+bin-dir:
+	@if [ ! -d ${BIN} ]; then \
+		echo "Creating directory ${BIN}"; \
+		mkdir -p ${BIN}; \
+	fi
+
+build: bin-dir
+	go build -o ${BIN}/goods_accounting ${CMD}
 
 .PHONY: install/goose
 install/goose:
